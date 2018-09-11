@@ -10,7 +10,7 @@ LABEL name="microsoft/mssql-server-linux" \
       vendor="Microsoft" \
       version="14.0" \
       release="1" \
-      summary="MS SQL Server" \
+      summary="MS SQL Server Developer" \
       description="MS SQL Server is ....." \
 ### Required labels above - recommended below
       url="https://www.microsoft.com/en-us/sql-server/" \
@@ -19,13 +19,20 @@ LABEL name="microsoft/mssql-server-linux" \
         -p 1433:1433 \
         -d  ${IMAGE}' \
       io.k8s.description="MS SQL Server is ....." \
-      io.k8s.display-name="MS SQL Server"
+      io.k8s.display-name="MS SQL Server Developer"
+
+# Environment Variables
+ARG SA_PASSWORD='Redhat1!'
+ARG TCP_PORT=1433
+ARG PID=Developer
+ENV ACCEPT_EULA=Y MSSQL_PID=$PID MSSQL_SA_PASSWORD=$SA_PASSWORD MSSQL_TCP_PORT=$TCP_PORT
 
 # Install latest mssql-server package
 RUN curl -o /etc/yum.repos.d/mssql-server.repo https://packages.microsoft.com/config/rhel/7/mssql-server-2017.repo && \
     curl -o /etc/yum.repos.d/msprod.repo https://packages.microsoft.com/config/rhel/7/prod.repo && \
-    ACCEPT_EULA=Y yum install -y mssql-server mssql-tools unixODBC-devel && \
-    yum clean all
+    ACCEPT_EULA=Y yum install -y mssql-server mssql-tools imssql-server-agent mssql-server-fts unixODBC-devel && \
+    yum clean all && \
+    rm -rf /var/cache/yum
 
 COPY uid_entrypoint /opt/mssql-tools/bin/
 ENV PATH=${PATH}:/opt/mssql/bin:/opt/mssql-tools/bin
@@ -36,7 +43,7 @@ RUN mkdir -p /var/opt/mssql/data && \
 USER 10001
 
 # Default SQL Server TCP/Port
-EXPOSE 1433
+EXPOSE $TCP_PORT
 
 VOLUME /var/opt/mssql/data
 
