@@ -25,7 +25,7 @@ LABEL name="microsoft/mssql-server-linux" \
 ARG SA_PASSWORD='Redhat1!'
 ARG TCP_PORT=1433
 ARG MSSQL_PID=Developer
-ENV ACCEPT_EULA=Y MSSQL_PID=$PID MSSQL_SA_PASSWORD=$SA_PASSWORD MSSQL_TCP_PORT=$TCP_PORT
+ENV ACCEPT_EULA=Y MSSQL_PID=$MSSQL_PID MSSQL_SA_PASSWORD=$SA_PASSWORD MSSQL_TCP_PORT=$TCP_PORT
 
 # Install latest mssql-server package
 RUN curl -o /etc/yum.repos.d/mssql-server.repo https://packages.microsoft.com/config/rhel/7/mssql-server-2017.repo && \
