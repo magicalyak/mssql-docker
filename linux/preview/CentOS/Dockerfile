@@ -30,9 +30,10 @@ ENV ACCEPT_EULA=Y MSSQL_PID=$PID MSSQL_SA_PASSWORD=$SA_PASSWORD MSSQL_TCP_PORT=$
 # Install latest mssql-server package
 RUN curl -o /etc/yum.repos.d/mssql-server.repo https://packages.microsoft.com/config/rhel/7/mssql-server-2017.repo && \
     curl -o /etc/yum.repos.d/msprod.repo https://packages.microsoft.com/config/rhel/7/prod.repo && \
-    ACCEPT_EULA=Y yum install -y mssql-server mssql-tools mssql-server-fts unixODBC-devel && \
+    ACCEPT_EULA=Y yum install -y mssql-server mssql-tools unixODBC-devel && \
     yum clean all && \
     rm -rf /var/cache/yum
+# add mssql-server-fts for Full Text Search (300MB+)
 
 COPY uid_entrypoint /opt/mssql-tools/bin/
 ENV PATH=${PATH}:/opt/mssql/bin:/opt/mssql-tools/bin
